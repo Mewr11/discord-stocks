@@ -48,6 +48,12 @@ async def command_remove(ctx, symbol):
     else:
         await ctx.send(f'{symbol} is not in the current report.')
 
+@bot.command(name='clear', help='Remove all stocks from the daily report')
+async def command_clear(ctx):
+    guild_id = ctx.guild.id
+    guild_report[guild_id] = []
+    await ctx.send('Daily report cleared.')
+
 def main():
     bot.run(TOKEN)
 
