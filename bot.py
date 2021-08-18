@@ -2,12 +2,15 @@ import discord
 from discord.ext import commands
 
 import yfinance as yf
+import pandas as pd
 
 import os
 from dotenv import load_dotenv
 
 load_dotenv()
 TOKEN = os.getenv('DISCORD_TOKEN')
+
+pd.options.plotting.backend = 'plotly'
 
 bot = commands.Bot(command_prefix='./')
 guild_report = {}
@@ -53,6 +56,19 @@ async def command_clear(ctx):
     guild_id = ctx.guild.id
     guild_report[guild_id] = []
     await ctx.send('Daily report cleared.')
+
+@bot.command(name='graph', help='<symbol> View a 1-month graph of a stock')
+async def command_graph(ctx, symbol):
+    guild_id = ctx.guild.id
+    ticker = yf.Ticker(symbol)
+    hist = ticker.history('1mo')['Close']
+    fig = hist.plot(template='simple_white')
+    fig.to_image('png')
+    if not os.path.exists('images'):
+        os.mkdir('images')
+    fig.write_image(f'images/{guild_id}.png')
+
+    await ctx.send(file=discord.File(f'images/{guild_id}.png'))
 
 def main():
     bot.run(TOKEN)
