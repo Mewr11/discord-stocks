@@ -1,5 +1,5 @@
 import discord
-from discord.ext import commands
+from discord.ext import commands, tasks
 
 import yfinance as yf
 import pandas as pd
@@ -75,6 +75,21 @@ async def command_graph(ctx, symbol):
     fig.write_image(f'images/{guild_id}.png')
 
     await ctx.send(file=discord.File(f'images/{guild_id}.png'))
+
+@tasks.loop(seconds=60)
+async def task_test():
+    for guild in bot.guilds:
+        if guild.id in guild_report:
+            for channel in guild.channels:
+                if channel.name == 'stock-reports':
+                    msg = 'Stocks in report:'
+                    for symbol in guild_report[guild.id]:
+                        msg += ' - ' + symbol + '\n'
+                    await channel.send(msg)
+
+@bot.event
+async def on_ready():
+    task_test.start()
 
 def main():
     bot.run(TOKEN)
