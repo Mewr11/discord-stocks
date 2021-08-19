@@ -1,9 +1,12 @@
+#pip install heroku3 
 import heroku3
 import argparse
 import os
 
-''' set env variable HEROKU_TOKEN to your heroku access token
-    ex: export HEROKU_TOKEN=<token>'''
+''' 
+set env variable HEROKU_TOKEN to your heroku access token
+ex: export HEROKU_TOKEN=<token>
+'''
 HEROKU_TOKEN = os.environ['HEROKU_TOKEN'] 
 
 '''
