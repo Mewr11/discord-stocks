@@ -60,9 +60,15 @@ async def command_clear(ctx):
 @bot.command(name='graph', help='<symbol> View a 1-month graph of a stock')
 async def command_graph(ctx, symbol):
     guild_id = ctx.guild.id
+
     ticker = yf.Ticker(symbol)
     hist = ticker.history('1mo')['Close']
-    fig = hist.plot(template='simple_white')
+    hist = hist.rename(symbol.upper())
+
+    fig = hist.plot(template='simple_white',
+                    labels=dict(value='Stock Price', variable='Stock'))
+    fig.update_yaxes(tickprefix='$')
+
     fig.to_image('png')
     if not os.path.exists('images'):
         os.mkdir('images')
