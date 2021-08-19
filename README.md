@@ -17,3 +17,6 @@ Remove all stocks from the daily report
 ### view \<symbol\>
 View the current price, daily open, and daily high and low of the specified stock
 
+### graph \<symbol\>
+View a 1-month close price graph of the specified stock
+
