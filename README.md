@@ -3,7 +3,7 @@ A simple bot for all of your stock information needs.
 
 ## Commands
 
-All commands are prefixed by `./`
+All commands are prefixed by `$`
 
 ### add \<symbol\>
 Adds the specified stock to the daily report

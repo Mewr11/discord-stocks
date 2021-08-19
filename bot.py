@@ -12,7 +12,7 @@ TOKEN = os.getenv('DISCORD_TOKEN')
 
 pd.options.plotting.backend = 'plotly'
 
-bot = commands.Bot(command_prefix='./')
+bot = commands.Bot(command_prefix='$')
 guild_report = {}
 
 
@@ -85,7 +85,7 @@ async def task_test():
                     r = {}
                     for symbol in guild_report[guild.id]:
                         t = yf.Ticker(symbol)
-                        hist = t.history(period='1d', interval='1h')['Close']
+                        hist = t.history(period='1mo', interval='1d')['Close']
                         hist = hist.rename(symbol.upper())
 
                         r[symbol.upper()] = hist
@@ -104,6 +104,8 @@ async def task_test():
 
 @bot.event
 async def on_ready():
+    for guild in bot.guilds:
+        guild_report[guild.id] = ['AMC', 'GME']
     task_test.start()
 
 def main():
