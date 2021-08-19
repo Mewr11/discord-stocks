@@ -82,10 +82,25 @@ async def task_test():
         if guild.id in guild_report:
             for channel in guild.channels:
                 if channel.name == 'stock-reports':
-                    msg = 'Stocks in report:'
+                    r = {}
                     for symbol in guild_report[guild.id]:
-                        msg += ' - ' + symbol + '\n'
-                    await channel.send(msg)
+                        t = yf.Ticker(symbol)
+                        hist = t.history(period='1d', interval='1h')['Close']
+                        hist = hist.rename(symbol.upper())
+
+                        r[symbol.upper()] = hist
+                    df = pd.DataFrame(r)
+
+                    fig = df.plot(template='simple_white',
+                                  labels=dict(value='Stock Price', variable='Stock'))
+                    fig.update_yaxes(tickprefix='$')
+
+                    fig.to_image('png')
+                    if not os.path.exists('images'):
+                        os.mkdir('images')
+                    fig.write_image(f'images/dr{guild.id}.png')
+
+                    await channel.send(file=discord.File(f'images/dr{guild.id}.png'))
 
 @bot.event
 async def on_ready():
