@@ -91,7 +91,7 @@ async def command_graph(ctx, symbol):
 
     await ctx.send(file=discord.File(f'images/{guild_id}.png'))
 
-@tasks.loop(seconds=300)
+@tasks.loop(seconds=86400)
 async def task_test():
     for guild in bot.guilds:
         if guild.id in guild_report:

@@ -20,3 +20,7 @@ View the current price, daily open, and daily high and low of the specified stoc
 ### graph \<symbol\>
 View a 1-month close price graph of the specified stock
 
+## Daily Report
+
+The daily report is a graph of all followed stocks (using the add, remove, and clear commands), posted once per day.
+
