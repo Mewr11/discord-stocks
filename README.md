@@ -3,7 +3,7 @@ A simple bot for all of your stock information needs.
 
 ## Commands
 
-All commands are prefixed by `./`
+All commands are prefixed by `$`
 
 ### add \<symbol\>
 Adds the specified stock to the daily report
@@ -19,4 +19,8 @@ View the current price, daily open, and daily high and low of the specified stoc
 
 ### graph \<symbol\>
 View a 1-month close price graph of the specified stock
+
+## Daily Report
+
+The daily report is a graph of all followed stocks (using the add, remove, and clear commands), posted once per day.
 
