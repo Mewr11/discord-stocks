@@ -24,20 +24,28 @@ async def command_echo(ctx, arg):
 @bot.command(name='view', help='<symbol> View the current, open, and daily high and low of a stock')
 async def command_view(ctx, symbol):
     ticker = yf.Ticker(symbol)
-    hist = ticker.history(period="1d")
+    hist = ticker.history(period='1d')
+    if len(hist) == 0:
+        await ctx.send(f'{symbol.upper()} not found.')
+        return
     c, o, h, l = hist['Close'][0], hist['Open'][0], hist['High'][0], hist['Low'][0]
     d = hist.index[0].date().strftime('%d %b %Y')
     await ctx.send(f'{d} for {symbol.upper()}:\nCurrent - ${c:.2f}\nOpen - ${o:.2f}\nHigh - ${h:.2f}\nLow - ${l:.2f}')
 
 @bot.command(name='add', help='<symbol> Add a stock to the daily report')
 async def command_add(ctx, symbol):
+    symbol = symbol.upper()
+    if len(yf.Ticker(symbol).history(period='1d')) == 0:
+        await ctx.send(f'{symbol} not found.')
+        return
+    guild = ctx.guild
     if guild.id in guild_report:
         if symbol not in guild_report[guild.id]:
-            guild_report[guild_id].append(symbol.upper())
+            guild_report[guild.id].append(symbol)
         else:
-            await ctx.send(f'{symbol.upper()} is already in the daily report.')
+            await ctx.send(f'{symbol} is already in the daily report.')
     else:
-        guild_report[guild.id] = [symbol.upper()]
+        guild_report[guild.id] = [symbol]
     await ctx.send('Current Report:\n' + ' - '.join(guild_report[guild.id]))
 
 @bot.command(name='remove', help='<symbol> Remove a stock from the daily report')
@@ -65,6 +73,11 @@ async def command_graph(ctx, symbol):
 
     ticker = yf.Ticker(symbol)
     hist = ticker.history('1mo')['Close']
+    
+    if len(hist) == 0:
+        await ctx.send(f'{symbol.upper()} not found.')
+        return
+
     hist = hist.rename(symbol.upper())
 
     fig = hist.plot(template='simple_white',
