@@ -31,12 +31,14 @@ async def command_view(ctx, symbol):
 
 @bot.command(name='add', help='<symbol> Add a stock to the daily report')
 async def command_add(ctx, symbol):
-    guild_id = ctx.guild.id
-    if guild_id in guild_report:
-        guild_report[guild_id].append(symbol.upper())
+    if guild.id in guild_report:
+        if symbol not in guild_report[guild.id]:
+            guild_report[guild_id].append(symbol.upper())
+        else:
+            await ctx.send(f'{symbol.upper()} is already in the daily report.')
     else:
-        guild_report[guild_id] = [symbol.upper()]
-    await ctx.send('Current Report:\n' + ' - '.join(guild_report[guild_id]))
+        guild_report[guild.id] = [symbol.upper()]
+    await ctx.send('Current Report:\n' + ' - '.join(guild_report[guild.id]))
 
 @bot.command(name='remove', help='<symbol> Remove a stock from the daily report')
 async def command_remove(ctx, symbol):
@@ -76,7 +78,7 @@ async def command_graph(ctx, symbol):
 
     await ctx.send(file=discord.File(f'images/{guild_id}.png'))
 
-@tasks.loop(seconds=60)
+@tasks.loop(seconds=300)
 async def task_test():
     for guild in bot.guilds:
         if guild.id in guild_report:
